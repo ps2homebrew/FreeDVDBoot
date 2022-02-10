@@ -4,6 +4,7 @@
 # as GCC adds move $v1, $v0 directly after jr $ra, effectively trashing $v0.
 # I don't know why this happens, but I do know enough about GCC that this
 # approach will most probably be easier. But feel free to try fixing it.
+# TODO: fill an issue to the ps2dev team
 
 .global GetThreadId
 GetThreadId:
@@ -43,14 +44,14 @@ SifSetReg:
 
 .global SifGetReg
 SifGetReg:
-	la $v1, 0x7a
-	syscall 0x7a
-	jr $ra
+    la $v1, 0x7a
+    syscall 0x7a
+    jr $ra
 
 .global ExecPS2
 ExecPS2:
-	la $v1, 0x07
-	syscall 0x07 # BTW why do we put the number here also?
+    la $v1, 0x07
+    syscall 0x07 # BTW why do we put the number here also?
 
 # Not a syscall, but it might as well be.
 

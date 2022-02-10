@@ -1,0 +1,106 @@
+name: CI-compile
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Payload compilation
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2dev:v1.0
+    # instead of "ps2dev/ps2dev:latest" you can use different tags, for example for old projects you can use "ps2dev/ps2dev:v1.0"
+    steps:
+      - name: Install dependencies
+        run: |
+          apk add build-base git zip grep cdrkit bash
+
+      - uses: actions/checkout@v2
+      - run: |
+          git fetch --prune --unshallow
+
+      - name: Get short SHA and repository name
+        id: slug
+        run: |
+          echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+          echo "::set-output name=REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")"
+
+      - name: Compile payload >=3.03
+        shell: bash
+        run: |
+          export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+          cd "PAYLOADS/3.03-3.11"
+          ls -l
+          ./build.sh
+          ls -l
+          md5sum *.bin
+
+      - name: Upload artifacts >=3.03
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: PAYLOADS_303-311_${{ steps.slug.outputs.sha8 }}
+          path: |
+            PAYLOADS/3.03-3.11
+
+      - name: Compile payload <2.13
+        run: |
+          export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+          cd "PAYLOADS/1.00-2.13"
+          make -B -f hardware.mk
+          ls -l
+          md5sum *.bin
+
+      - name: Upload artifacts <2.13
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: PAYLOADS_110-213_${{ steps.slug.outputs.sha8 }}
+          path: |
+            PAYLOADS/1.00-2.13
+
+      - name: Compile payload <2.13 (PCSX2 version)
+        run: |
+          export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+          cd "PAYLOADS/1.00-2.13"
+          make -B -f emulator.mk
+          ls -l
+          md5sum *.bin
+
+      - name: Upload artifacts <2.13 (PCSX2 version)
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: PAYLOADS_110-213_PCSX2_${{ steps.slug.outputs.sha8 }}
+          path: |
+            PAYLOADS/1.00-2.13
+            !PAYLOADS/1.00-2.13/dvd.iso.bin
+
+      - run: |
+          mv PAYLOADS/3.03-3.11/exploit.iso FreeDVDBoot_3.03-3.11_${{ steps.slug.outputs.sha8 }}.iso
+          zip FreeDVDBoot_3.03-3.11_${{ steps.slug.outputs.sha8 }}.zip FreeDVDBoot_3.03-3.11_${{ steps.slug.outputs.sha8 }}.iso
+          mv PAYLOADS/1.00-2.13/dvd.iso FreeDVDBoot_1.00-2.13_${{ steps.slug.outputs.sha8 }}.iso
+          zip FreeDVDBoot_1.00-2.13_${{ steps.slug.outputs.sha8 }}.zip FreeDVDBoot_1.00-2.13_${{ steps.slug.outputs.sha8 }}.iso
+          mv PAYLOADS/1.00-2.13/dvd_pcsx2.iso FreeDVDBoot_1.00-2.13_PCSX2_${{ steps.slug.outputs.sha8 }}.iso
+          zip FreeDVDBoot_1.00-2.13_PCSX2_${{ steps.slug.outputs.sha8 }}.zip FreeDVDBoot_1.00-2.13_PCSX2_${{ steps.slug.outputs.sha8 }}.iso
+
+      - name: Create pre-release
+        if: github.ref == 'refs/heads/master'
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          automatic_release_tag: "latest"
+          title: "Development build"
+          files: |
+            *.zip
+
+      - name: Create Tagged Release Draft
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          draft: true
+          files: |
+            *.zip
