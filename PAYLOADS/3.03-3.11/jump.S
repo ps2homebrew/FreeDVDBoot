@@ -4,5 +4,5 @@
 
 .global _start
 _start:
-	j JUMP
-	nop
+    j JUMP
+    nop
