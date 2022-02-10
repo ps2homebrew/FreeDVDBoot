@@ -77,6 +77,34 @@ static void memset_ee(void *s, int c, unsigned int n);
 
 #define BD2 (*(volatile int *)0xBD000020) // msflag
 
+static int SifGetMSFlag()
+{
+    int a, b;
+
+    b = BD2;
+    do {
+        a = b;
+        b = BD2;
+    } while (a != b);
+
+    return a;
+}
+
+static int SifSetMSFlag(unsigned int value)
+{
+    int a, b;
+
+    BD2 = value;
+
+    b = BD2;
+    do {
+        a = b;
+        b = BD2;
+    } while (a != b);
+
+    return a;
+}
+
 static void readData(void *dest, unsigned int offset, size_t n)
 {
     // unsigned char buffer[SECTOR_SIZE];
@@ -263,36 +291,6 @@ static void *memset(void *s, int c, unsigned int n)
         ((unsigned char *)s)[i] = c;
 
     return s;
-}
-
-// TODO: `SifGetMSFlag' was declared implicitly `extern' and later `static'
-static int SifGetMSFlag()
-{
-    int a, b;
-
-    b = BD2;
-    do {
-        a = b;
-        b = BD2;
-    } while (a != b);
-
-    return a;
-}
-
-// TODO: `SifSetMSFlag' was declared implicitly `extern' and later `static'
-static int SifSetMSFlag(unsigned int value)
-{
-    int a, b;
-
-    BD2 = value;
-
-    b = BD2;
-    do {
-        a = b;
-        b = BD2;
-    } while (a != b);
-
-    return a;
 }
 
 asm("\n\

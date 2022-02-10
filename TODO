@@ -1,0 +1,6 @@
+Test payload in pcsx2 with the real DVDROM content, not with repacked dvd-player versions
+port 1.00-2.13 payload to all DVD FW in that range
+try to generate an iso with the mix of 2 payloads
+document more how ElReino payload is working
+fix compilation warnings
+test if generated iso files works
