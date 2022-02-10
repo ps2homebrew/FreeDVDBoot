@@ -1,323 +1,338 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
 
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  </style>
 </head>
+
 <body>
 
-<h1>3.03 - 3.11</h1>
-<p>
-	These firmware versions all have the same getDiscData 0xffff * 3 * 8 buffer overflow of immediately controllable contents.
-</p>
+  <h1>3.03 - 3.11</h1>
+  <p>
+    These firmware versions all have the same getDiscData 0xffff * 3 * 8 buffer overflow of immediately controllable
+    contents.
+  </p>
 
-<table>
-  <tr>
-    <th></th>
-    <th>3.03</th>
-    <th>3.04J</th>
-    <th>3.04M</th>
-    <th>3.10</th>
-    <th>3.11</th>
-  </tr>
-  <tr>
-  	<th style="text-align: center" colspan="6">Symbols</th>
-  </tr>
-  <tr>
-    <th>getDiscData</th>
-    <td>0x243438</td>
-    <td>0x23e150</td>
-    <td>0x23e138</td>
-    <td>0x25c9f0</td>
-    <td>0x258b98</td>
-  </tr>
-  <tr>
-    <th>getDiscByte</th>
-    <td>0x243368</td>
-    <td>0x23e080</td>
-    <td>0x23e068</td>
-    <td>0x25c920</td>
-    <td>0x258ac8</td>
-  </tr>
-  <tr>
-    <th>currentDiscBytePointer</th>
-    <td>0x15f42a4</td>
-    <td>0x1273ae4</td>
-    <td>0x16ceee4</td>
-    <td>0x1411fe4</td>
-    <td>0x143b3e4</td>
-  </tr>
-  <tr>
-    <th>endDiscBytePointer</th>
-    <td>0x15f42a8</td>
-    <td>0x1273ae8</td>
-    <td>0x16ceee8</td>
-    <td>0x1411fe8</td>
-    <td>0x143b3e8</td>
-  </tr>
-  <tr>
-    <th>0xff * 3 * 8 overflow</th>
-    <td>0x241d0c</td>
-    <td>0x23cb1c</td>
-    <td>0x23cb04</td>
-    <td>0x25b3bc</td>
-    <td>0x257564</td>
-  </tr>
-  <tr>
-    <th>fpIndex</th>
-    <td>0x15f4b0a</td>
-    <td>0x127434a</td>
-    <td>0x16cf74a</td>
-    <td>0x141284a</td>
-    <td>0x143bc4a</td>
-  </tr>
-  <tr>
-    <th>fpArray</th>
-    <td>0x923d88</td>
-    <td>0x6d4e68</td>
-    <td>0x95ace8</td>
-    <td>0x5b9d40</td>
-    <td>0x3b3050</td>
-  </tr>
-  <tr>
-    <th>OOB call</th>
-    <td>0x0244E1C</td>
-    <td>0x23fad4</td>
-    <td>0x23faac</td>
-    <td>0x25e388</td>
-    <td>0x25ab44</td>
-  </tr>
-  <tr>
-    <th>getBufferInternal</th>
-    <td>0x262360</td>
-    <td>0x261560</td>
-    <td>0x261548</td>
-    <td>0x2986a0</td>
-    <td>0x2952f0</td>
-  </tr>
-  <tr>
-    <th>pointToIFO</th>
-    <td>0x2432c8</td>
-    <td>0x23dfe0</td>
-    <td>0x23dfc8</td>
-    <td>0x25c880</td>
-    <td>0x258a28</td>
-  </tr>
-  <tr>
-    <th>SifIopReboot</th>
-    <td></td>
-    <td></td>
-    <td>0x291528</td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>SifInitRpc</th>
-    <td>0x2082a0</td>
-    <td></td>
-    <td>0x208260</td>
-    <td>0x84180</td>
-    <td>0x208d80</td>
-  </tr>
-  <tr>
-    <th>SifExitRpc</th>
-    <td>0x208440</td>
-    <td></td>
-    <td>0x208400</td>
-    <td>0x84310</td>
-    <td>0x208f20</td>
-  </tr>
-  <tr>
-    <th>SifIopReset</th>
-    <td>0x291fb8</td>
-    <td></td>
-    <td>0x291358</td>
-    <td>0x84fe0</td>
-    <td>0x20e7d8</td>
-  </tr>
-  <tr>
-    <th>SifIopSync</th>
-    <td>0x292138</td>
-    <td></td>
-    <td>0x2914d8</td>
-    <td>0x85110</td>
-    <td>0x20e958</td>
-  </tr>
-  <tr>
-  	<th style="text-align: center" colspan="6">Controlled memory ranges</th>
-  </tr>
-  <tr>
-    <th>Destination of large copy</th>
-    <td>0x15ec890</td>
-    <td>0x126d8d4</td>
-    <td>0x16c8cd4</td>
-    <td>0x140bdd4</td>
-    <td>0x14351cc</td>
-  </tr>
-  <tr>
-    <th>Destination + max size</th>
-    <td>0x176C878</td>
-    <td>0x12AD8D0</td>
-    <td>0x1848CBC</td>
-    <td>0x158BDBC</td>
-    <td>0x15B51B4</td>
-  </tr>
-  <tr>
-  	<th style="text-align: center" colspan="6">Exploit values</th>
-  </tr>
-  <tr>
-    <th>currentDiscBytePointer value at overwrite</th>
-    <td>0x015f1008</td>
-    <td>0x01273044</td>
-    <td>0x016ce444</td>
-    <td>0x01411544</td>
-    <td>0x0143a94c</td>
-  </tr>
-  <tr>
-    <th>Jump target</th>
-    <td>0x15ea540</td>
-    <td>0x0126b7e0</td>
-    <td>0x01800180</td>
-    <td>0x01500014</td>
-    <td>0x01500014</td>
-  </tr>
-  <tr>
-    <th>Address of jump target</th>
-    <td>0x928D24</td>
-    <td>0x6D9C3C</td>
-    <td>0x95CF40</td>
-    <td>0x5f1f38</td>
-    <td>0x3EA438</td>
-  </tr>
-  <tr>
-    <th>Intermediate jump location</th>
-    <td></td>
-    <td>0x012811E4</td>
-    <td>Not required</td>
-    <td>Not required</td>
-    <td>Not required</td>
-  </tr>
-  <tr>
-    <th>Intermediate jump target</th>
-    <td></td>
-    <td>0x01281340</td>
-    <td>Not required</td>
-    <td>Not required</td>
-    <td>Not required</td>
-  </tr>
-  <tr>
-  	<th style="text-align: center" colspan="6">IFO offsets</th>
-  </tr>
-  <tr>
-  	<th>currentDiscBytePointer</th>
-    <td>0x1c6c (4 bytes)</td>
-    <td>0x2744 (2 bytes), 0x2c26 (2 bytes)</td>
-    <td>0x2744 ()</td>
-    <td>0x2744 (4 bytes)</td>
-    <td>0x277c (4 bytes)</td>
-  </tr>
-  <tr>
-  	<th>fpIndex</th>
-    <td>0x24D2</td>
-    <td>0x29ea</td>
-    <td>0x2faa</td>
-    <td>0x2faa</td>
-    <td>0x2fe2</td>
-  </tr>
-  <tr>
-  	<th>Payload</th>
-    <td>0x0e8c</td>
-    <td>0x2880</td>
-    <td>0x2d00</td>
-    <td>0x2bb4</td>
-    <td>0x2954</td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th></th>
+      <th>3.03</th>
+      <th>3.04J</th>
+      <th>3.04M</th>
+      <th>3.10</th>
+      <th>3.11</th>
+    </tr>
+    <tr>
+      <th style="text-align: center" colspan="6">Symbols</th>
+    </tr>
+    <tr>
+      <th>getDiscData</th>
+      <td>0x243438</td>
+      <td>0x23e150</td>
+      <td>0x23e138</td>
+      <td>0x25c9f0</td>
+      <td>0x258b98</td>
+    </tr>
+    <tr>
+      <th>getDiscByte</th>
+      <td>0x243368</td>
+      <td>0x23e080</td>
+      <td>0x23e068</td>
+      <td>0x25c920</td>
+      <td>0x258ac8</td>
+    </tr>
+    <tr>
+      <th>currentDiscBytePointer</th>
+      <td>0x15f42a4</td>
+      <td>0x1273ae4</td>
+      <td>0x16ceee4</td>
+      <td>0x1411fe4</td>
+      <td>0x143b3e4</td>
+    </tr>
+    <tr>
+      <th>endDiscBytePointer</th>
+      <td>0x15f42a8</td>
+      <td>0x1273ae8</td>
+      <td>0x16ceee8</td>
+      <td>0x1411fe8</td>
+      <td>0x143b3e8</td>
+    </tr>
+    <tr>
+      <th>0xff * 3 * 8 overflow</th>
+      <td>0x241d0c</td>
+      <td>0x23cb1c</td>
+      <td>0x23cb04</td>
+      <td>0x25b3bc</td>
+      <td>0x257564</td>
+    </tr>
+    <tr>
+      <th>fpIndex</th>
+      <td>0x15f4b0a</td>
+      <td>0x127434a</td>
+      <td>0x16cf74a</td>
+      <td>0x141284a</td>
+      <td>0x143bc4a</td>
+    </tr>
+    <tr>
+      <th>fpArray</th>
+      <td>0x923d88</td>
+      <td>0x6d4e68</td>
+      <td>0x95ace8</td>
+      <td>0x5b9d40</td>
+      <td>0x3b3050</td>
+    </tr>
+    <tr>
+      <th>OOB call</th>
+      <td>0x0244E1C</td>
+      <td>0x23fad4</td>
+      <td>0x23faac</td>
+      <td>0x25e388</td>
+      <td>0x25ab44</td>
+    </tr>
+    <tr>
+      <th>getBufferInternal</th>
+      <td>0x262360</td>
+      <td>0x261560</td>
+      <td>0x261548</td>
+      <td>0x2986a0</td>
+      <td>0x2952f0</td>
+    </tr>
+    <tr>
+      <th>pointToIFO</th>
+      <td>0x2432c8</td>
+      <td>0x23dfe0</td>
+      <td>0x23dfc8</td>
+      <td>0x25c880</td>
+      <td>0x258a28</td>
+    </tr>
+    <tr>
+      <th>SifIopReboot</th>
+      <td></td>
+      <td></td>
+      <td>0x291528</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>SifInitRpc</th>
+      <td>0x2082a0</td>
+      <td></td>
+      <td>0x208260</td>
+      <td>0x84180</td>
+      <td>0x208d80</td>
+    </tr>
+    <tr>
+      <th>SifExitRpc</th>
+      <td>0x208440</td>
+      <td></td>
+      <td>0x208400</td>
+      <td>0x84310</td>
+      <td>0x208f20</td>
+    </tr>
+    <tr>
+      <th>SifIopReset</th>
+      <td>0x291fb8</td>
+      <td></td>
+      <td>0x291358</td>
+      <td>0x84fe0</td>
+      <td>0x20e7d8</td>
+    </tr>
+    <tr>
+      <th>SifIopSync</th>
+      <td>0x292138</td>
+      <td></td>
+      <td>0x2914d8</td>
+      <td>0x85110</td>
+      <td>0x20e958</td>
+    </tr>
+    <tr>
+      <th style="text-align: center" colspan="6">Controlled memory ranges</th>
+    </tr>
+    <tr>
+      <th>Destination of large copy</th>
+      <td>0x15ec890</td>
+      <td>0x126d8d4</td>
+      <td>0x16c8cd4</td>
+      <td>0x140bdd4</td>
+      <td>0x14351cc</td>
+    </tr>
+    <tr>
+      <th>Destination + max size</th>
+      <td>0x176C878</td>
+      <td>0x12AD8D0</td>
+      <td>0x1848CBC</td>
+      <td>0x158BDBC</td>
+      <td>0x15B51B4</td>
+    </tr>
+    <tr>
+      <th style="text-align: center" colspan="6">Exploit values</th>
+    </tr>
+    <tr>
+      <th>currentDiscBytePointer value at overwrite</th>
+      <td>0x015f1008</td>
+      <td>0x01273044</td>
+      <td>0x016ce444</td>
+      <td>0x01411544</td>
+      <td>0x0143a94c</td>
+    </tr>
+    <tr>
+      <th>Jump target</th>
+      <td>0x15ea540</td>
+      <td>0x0126b7e0</td>
+      <td>0x01800180</td>
+      <td>0x01500014</td>
+      <td>0x01500014</td>
+    </tr>
+    <tr>
+      <th>Address of jump target</th>
+      <td>0x928D24</td>
+      <td>0x6D9C3C</td>
+      <td>0x95CF40</td>
+      <td>0x5f1f38</td>
+      <td>0x3EA438</td>
+    </tr>
+    <tr>
+      <th>Intermediate jump location</th>
+      <td></td>
+      <td>0x012811E4</td>
+      <td>Not required</td>
+      <td>Not required</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <th>Intermediate jump target</th>
+      <td></td>
+      <td>0x01281340</td>
+      <td>Not required</td>
+      <td>Not required</td>
+      <td>Not required</td>
+    </tr>
+    <tr>
+      <th style="text-align: center" colspan="6">IFO offsets</th>
+    </tr>
+    <tr>
+      <th>currentDiscBytePointer</th>
+      <td>0x1c6c (4 bytes)</td>
+      <td>0x2744 (2 bytes), 0x2c26 (2 bytes)</td>
+      <td>0x2744 ()</td>
+      <td>0x2744 (4 bytes)</td>
+      <td>0x277c (4 bytes)</td>
+    </tr>
+    <tr>
+      <th>fpIndex</th>
+      <td>0x24D2</td>
+      <td>0x29ea</td>
+      <td>0x2faa</td>
+      <td>0x2faa</td>
+      <td>0x2fe2</td>
+    </tr>
+    <tr>
+      <th>Payload</th>
+      <td>0x0e8c</td>
+      <td>0x2880</td>
+      <td>0x2d00</td>
+      <td>0x2bb4</td>
+      <td>0x2954</td>
+    </tr>
+  </table>
 
-<br>
+  <br>
 
-<h2>3.03</h2>
-<p>
-  3.03 has a couple of additional tricks going on. There are no jump targets which lie within our controlled range from any buffer overflows, however the jump target 0x15ea540 is very close to the beginning of our IFO file contents (0x15ea620).
-</p>
+  <h2>3.03</h2>
+  <p>
+    3.03 has a couple of additional tricks going on. There are no jump targets that lie within our controlled range from
+    any buffer overflows, however, the jump target 0x15ea540 is very close to the beginning of our IFO file contents
+    (0x15ea620).
+  </p>
 
-<p>
-  The memory between the jump target and the start of the IFO (0x15ea540 - 0x15ea620) is all zeroes, so that's just a NOP-sled. Then the IFO header "DVDVIDEO-VMG" turns out to decode to a conditional relative branch which not only happens to be taken, but also jumps to fully controlled contents later in the IFO:
-</p>
+  <p>
+    The memory between the jump target and the start of the IFO (0x15ea540 - 0x15ea620) is all zeroes, so that's just a
+    NOP-sled. Then the IFO header "DVDVIDEO-VMG" turns out to decode to a conditional relative branch which not only
+    happens to be taken, but also jumps to fully controlled contents later in the IFO:
+  </p>
 
-<pre><code>bnel    s2,a0,pos_015FFF34</code></pre>
+  <pre><code>bnel    s2,a0,pos_015FFF34</code></pre>
 
-<br>
+  <br>
 
-<p>
-  In addition, that jump target does not fall within language data, so the 3.03 exploit supports all languages, not just English!
-</p>
+  <p>
+    In addition, that jump target does not fall within language data, so the 3.03 exploit supports all languages, not
+    just English!
+  </p>
 
-<br>
+  <br>
 
-<h2>Testing</h2>
-<ul>
-  <li>3.03 has only been tested in region E - other regions need dumping and testing,</li>
-  <li>3.04 only region M and J are repacked - they are both different, other regions need dumping and testing,</li>
-  <li>3.10 and 3.11 have both been tested on all regions and work the same,</li>
-</ul>
+  <h2>Testing</h2>
+  <ul>
+    <li>3.03 has only been tested in region E - other regions need dumping and testing,</li>
+    <li>3.04 only region M and J are repacked - they are both different, other regions need dumping and testing,</li>
+    <li>3.10 and 3.11 have both been tested on all regions and work the same,</li>
+  </ul>
 
-<br>
+  <br>
 
-<h2>Conflicts</h2>
-<p>
-	In order to merge 2 exploits into a single ISO there must be either:
-</p>
+  <h2>Conflicts</h2>
+  <p>
+    In order to merge 2 exploits into a single ISO there must be either:
+  </p>
 
-<ul>
-<li>No conflict between offset of currentDiscBytePointer corruption value in IFO file so that the two versions can specify different addresses (3.10 and 3.11),</li>
-<li>Controlled memory at a common address between the two versions so that currentDiscBytePointer can be written to controlled memory region for both (3.04J and 3.10),</li>
-</ul>
+  <ul>
+    <li>No conflict between an offset of currentDiscBytePointer corruption value in IFO file so that the two versions
+      can specify different addresses (3.10 and 3.11),</li>
+    <li>Controlled memory at a common address between the two versions so that currentDiscBytePointer can be written to
+      controlled memory region for both (3.04J and 3.10),</li>
+  </ul>
 
-<p>
-	It's more complicated than that, because the currentDiscBytePointer is overwritten byte-by-byte.
-</p>
+  <p>
+    It's more complicated than that because the currentDiscBytePointer is overwritten byte-by-byte.
+  </p>
 
-<br>
+  <br>
 
-<h1>&lt; 3.03</h1>
-<p>
-	These firmwares don't use the same getDiscData stream reader API, instead they manually call getBuffer and then memcpy from that sectorBuffer somewhere else. They still contain the vulnerability, but as it occurs from memcpy of OOB memory into other OOB memory, it is not just immediately possible for the full memory range overflowed with to contain fully controlled contents.
-</p>
+  <h1>&lt; 3.03</h1>
+  <p>
+    These firmwares don't use the same getDiscData stream reader API, instead, they manually call getBuffer and then
+    memcpy from that sectorBuffer somewhere else. They still contain the vulnerability, but as it occurs from memcpy of
+    OOB memory into other OOB memory, it is not just immediately possible for the full memory range overflowed with to
+    contain fully controlled contents.
+  </p>
 
-<p>
-	Let's look at 3.02 specifically.
-</p>
+  <p>
+    Let's look at 3.02 specifically.
+  </p>
 
-<pre><code>0x256668 - getBufferInternal
+  <pre><code>0x256668 - getBufferInternal
 0x256888 - getBuffer</pre></code>
 
-<br>
+  <br>
 
-<p>
-	Searching calls to getBuffer, it's always a fixed number of sectors, 1 to 4, so as previously stated we can't just overflow straight into fpIndex with controlled contents as in &gt; 3.02.
-</p>
+  <p>
+    Searching calls to getBuffer, it's always a fixed number of sectors, 1 to 4, so as previously stated we can't just
+    overflow straight into fpIndex with controlled contents as in &gt; 3.02.
+  </p>
 
-<p>
-	But, <b>the buffer overflows definitely do still exist</b>. The function at 0x23e560 is a nice self contained one:
-</p>
+  <p>
+    But, <b>the buffer overflows definitely do still exist</b>. The function at 0x23e560 is a nice self-contained one:
+  </p>
 
-<pre><code>long bufferOverflow(void) {
+  <pre><code>long bufferOverflow(void) {
   long lVar1;
   
   lVar1 = getBuffer(s_VIDEO_TS.IFO_0090c210,(long)(int)DAT_013c7840,sectorBuffer,1,0);
@@ -331,13 +346,14 @@ tr:nth-child(even) {
   return lVar1;
 }</code></pre>
 
-<br>
+  <br>
 
-<p>
-	The memcpy call can overwrite memory from 0x013c7898 to 0x148788C (0x013c7898 + 0xffff * 0xc). The buffer overflow we are triggering in all other exploits because it gives biggest size is at 0x240284:
-</p>
+  <p>
+    The memcpy call can overwrite memory from 0x013c7898 to 0x148788C (0x013c7898 + 0xffff * 0xc). The buffer overflow
+    we are triggering in all other exploits because it gives biggest size is at 0x240284:
+  </p>
 
-<pre><code>
+  <pre><code>
       length2 = (ushort)sectorBuffer[uVar33 + 2] * 0x100 + (ushort)sectorBuffer[uVar33 + 3];
       length1 = (ushort)sectorBuffer[uVar33] * 0x100 + (ushort)sectorBuffer[uVar33 + 1];
       length3 = (ushort)sectorBuffer[uVar33 + 4] * 0x100 + (ushort)sectorBuffer[uVar33 + 5];
@@ -345,76 +361,88 @@ tr:nth-child(even) {
       memcpy(&DAT_013c9a30,sectorBuffer + uVar33 + 8,
              ((uint)length1 + (uint)length2 + (uint)length3) * 8);</code></pre>
 
-<br>
+  <br>
 
-<p>
-	fpIndex is at 0x13cfaca (leading to OOB call at 0x242f6c), and if we can set that to a controlled value we potentially have an exploit (if there's a good jump target).
-</p>
+  <p>
+    fpIndex is at 0x13cfaca (leading to OOB call at 0x242f6c), and if we can set that to a controlled value we
+    potentially have an exploit (if there's a good jump target).
+  </p>
 
-<p>
-	fpIndex can be overwritten by either of the memcpy buffer overflows shown with a large enough size, but we're not corrupting it with data coming straight from disc; we only read at most 4 sectors (0x800 * 4) = 0x2000 into sectorBuffer, however we need to memcpy 0x609A bytes from sectorBuffer into 0x13c9a30 to overwrite fpIndex (0x13cfaca-0x13c9a30), so we'll be copying from uncontrolled OOB memory into fpIndex.
-</p>
+  <p>
+    fpIndex can be overwritten by either of the memcpy buffer overflows shown with a large enough size, but we're not
+    corrupting it with data coming straight from the disc; we only read at most 4 sectors (0x800 * 4) = 0x2000 into
+    sectorBuffer, however, we need to memcpy 0x609A bytes from sectorBuffer into 0x13c9a30 to overwrite fpIndex
+    (0x13cfaca-0x13c9a30), so we'll be copying from uncontrolled OOB memory into fpIndex.
+  </p>
 
-<p>
-    So, can we make that OOB memory contain controlled contents? Well, by making use of that buffer overflow, we can shift the question from "can we control fpIndex (0x13cfaca)", to "can we control sectorBuffer + 0x609A = 0x13D331A", since if we control that the memcpy will then copy into fpIndex from an address we can control the contents of.
-</p>
+  <p>
+    So, can we make that OOB memory contain controlled contents? Well, by making use of that buffer overflow, we can
+    shift the question from "can we control fpIndex (0x13cfaca)", to "can we control sectorBuffer + 0x609A = 0x13D331A",
+    since if we control that the memcpy will then copy into fpIndex from an address we can control the contents of.
+  </p>
 
-<p>
-  Looking at all of the copies - maybe you will be lucky and find that it happens to line up that after a series of copies - some value you control ends up in fpIndex. Will need more time on it.
-</p>
+  <p>
+    Looking at all of the copies - maybe you will be lucky and find that it happens to line up that after a series of
+    copies - some value you control ends up in fpIndex. Will need more time on it.
+  </p>
 
-<br>
+  <br>
 
-<h2>UDF vulnerabilities</h2>
-<p>
-  The IFO buffer overflows are really easy to find as the IFO parsing is the first thing the DVD player does on EE side. We'll probably want to reverse engineer deeper into things like the actual video decoding, etc, in order to see if more easily exploitable bugs are available; for that, I hope others will help collaborate and share notes.
-</p>
+  <h2>UDF vulnerabilities</h2>
+  <p>
+    The IFO buffer overflows are easy to find as the IFO parsing is the first thing the DVD player does on the EE side.
+    We'll probably want to reverse engineer deeper into things like the actual video decoding, etc, to see if more
+    easily exploitable bugs are available; for that, I hope others will help collaborate and share notes.
+  </p>
 
-<br>
+  <br>
 
-<h2 id="readPartitionTables">readPartitionTables stack buffer overflow - Found by ElReino</h2>
-<p>
-  This is a stack buffer overflow occuring in UDFIO IOP processor module. From 2.10E, at 0xb37e4:
-</p>
+  <h2 id="readPartitionTables">readPartitionTables stack buffer overflow - Found by ElReino</h2>
+  <p>
+    This is a stack buffer overflow occuring in UDFIO IOP processor module. From 2.10E, at 0xb37e4:
+  </p>
 
-<pre><code>    memcpy(&lengthOfExtendedAttributes,DescriptorBuf + 0xa8,4);
+  <pre><code>    memcpy(&lengthOfExtendedAttributes,DescriptorBuf + 0xa8,4);
     memcpy(&lengthOfAllocationDescriptors,DescriptorBuf + 0xac,4);
     memset(&AllocationDescriptors,0,8);
     memcpy(&AllocationDescriptors,DescriptorBuf + lengthOfExtendedAttributes + 0xb0,
            lengthOfAllocationDescriptors);</code></pre>
 
-<br>
+  <br>
 
-<p>
-  Interestingly, this was actually patched by Sony in firmware 2.14! We see it just uses fixed size of 8 bytes:
-</p>
+  <p>
+    Interestingly, this was actually patched by Sony in firmware 2.14! We see it just uses fixed size of 8 bytes:
+  </p>
 
-<pre><code>  memcpy(local_20,0x5ab8,4);
+  <pre><code>  memcpy(local_20,0x5ab8,4);
   memcpy(auStack36,0x5abc,4);
   memset(&local_18,0,8);
   memcpy(&local_18,(int)&PTR_DAT_00005ac0 + local_20[0],8);
 </code></pre>
 
-<br>
+  <br>
 
-<p>
-  To find the vulnerability in an IOP memory dump, search for this instruction sequence:
-</p>
+  <p>
+    To find the vulnerability in an IOP memory dump, search for this instruction sequence:
+  </p>
 
-<pre><code>08 00 06 24       _li        param_3,0x8</code></pre>
+  <pre><code>08 00 06 24       _li        param_3,0x8</code></pre>
 
-<br>
+  <br>
 
-<p>
-  Until you get one that matches the memcpy/memset pattern shown above in the decompiler view.
-</p>
+  <p>
+    Search until you get one that matches the memcpy/memset pattern shown above in the decompiler view.
+  </p>
 
-<p>
-  If you are paranoid about cache, there's a really nice ROP gadget in the sound module. To find where the FlushDCache function is in your BIOS, run an IOP RAM dump through <a href="https://gist.github.com/CTurt/6eecc155e2b545a58bad9a65e866b4ab">this code</a>. Then look for calls to that function to find a nice ROP gadget, for 2.10 it's at 0x57f1c:
-</p>
+  <p>
+    If you are paranoid about cache, there's a really nice ROP gadget in the sound module. To find where the FlushDCache
+    function is in your BIOS, run an IOP RAM dump through <a
+      href="https://gist.github.com/CTurt/6eecc155e2b545a58bad9a65e866b4ab">this code</a>. Then look for calls to that
+    function to find a nice ROP gadget, for 2.10 it's at 0x57f1c:
+  </p>
 
 
-<pre><code>        00057f1c 3e 67 01 0c       jal        FlushDCacheWrapper
+  <pre><code>        00057f1c 3e 67 01 0c       jal        FlushDCacheWrapper
         00057f20 00 00 00 00       _nop
         00057f24 18 00 bf 8f       lw         ra,local_8(sp)
         00057f28 14 00 b1 8f       lw         s1,local_c(sp)
@@ -423,96 +451,105 @@ tr:nth-child(even) {
         00057f34 08 00 e0 03       jr         ra
         00057f38 20 00 bd 27       _addiu     sp,sp,0x20</code></pre>
 
-<br>
+  <br>
 
-<p>
-  This will be our initial corrupted return address, then we'll jump to the uncached virtual address of the actual IOP payload entry-point, and first thing will be undoing the corruption from this ROP gadget (sub 0x20 from sp and restore s0/s1). The IOP payload loads a second IOP payload, which loads an ELF into EE RAM, then redirects return address on EE stack and IOP returns gracefully (which resumes EE and triggers EE payload).
-</p>
+  <p>
+    This will be our initial corrupted return address, then we'll jump to the uncached virtual address of the actual IOP
+    payload entry-point, and the first thing will be undoing the corruption from this ROP gadget (sub 0x20 from sp and
+    restore s0/s1). The IOP payload loads a second IOP payload, that loads an ELF into EE RAM, then redirects return
+    address on EE stack and IOP returns gracefully (that resumes EE and triggers EE payload).
+  </p>
 
-<p>
-  Table of addresses for completed ports below. It should be possible to port to all versions from 1.00 - 2.13:
-<p>
+  <p>
+    Table of addresses for completed ports below. It should be possible to port to all versions from 1.00 - 2.13:
+  <p>
 
-<table>
-  <tr>
-    <th>Symbol</th>
-    <th>2.10</th>
-    <th>2.12</th>
-  </tr>
-  <tr>
-    <th>memcpy overflow</th>
-    <td>0xb37e4</td>
-    <td>0xb37e8</td>
-  </tr>
-  <tr>
-    <th>copy destination</th>
-    <td>0x01F6268</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>return address location</th>
-    <td>0x1f62ac</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>jump to return address</th>
-    <td>0xB3BF0</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>stage 1 address</th>
-    <td>0x1f62b0</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>Flush D Cache IOP</th>
-    <td>0x0003044</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>Flush I Cache IOP</th>
-    <td>0x00002f40</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>Flush D Cache IOP caller (initial jump address)</th>
-    <td>0x57f1c</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>Return address in ISO</th>
-    <td>0x00818f4</td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>Second return address in ISO</th>
-    <td>0x0081910</td>
-    <td></td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <th>Symbol</th>
+      <th>2.10</th>
+      <th>2.12</th>
+    </tr>
+    <tr>
+      <th>memcpy overflow</th>
+      <td>0xb37e4</td>
+      <td>0xb37e8</td>
+    </tr>
+    <tr>
+      <th>copy destination</th>
+      <td>0x01F6268</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>return address location</th>
+      <td>0x1f62ac</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>jump to return address</th>
+      <td>0xB3BF0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>stage 1 address</th>
+      <td>0x1f62b0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Flush D Cache IOP</th>
+      <td>0x0003044</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Flush I Cache IOP</th>
+      <td>0x00002f40</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Flush D Cache IOP caller (initial jump address)</th>
+      <td>0x57f1c</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Return address in ISO</th>
+      <td>0x00818f4</td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>Second return address in ISO</th>
+      <td>0x0081910</td>
+      <td></td>
+    </tr>
+  </table>
 
-<br>
+  <br>
 
-<h2 id="readSectorsOverflow">readSectors buffer overflow</h2>
-<p>
-  In 2.14, Sony removed the bounds check on sizes passed to readSectors, so we can reach the following with controlled sectorCount:
-</p>
+  <h2 id="readSectorsOverflow">readSectors buffer overflow</h2>
+  <p>
+    In 2.14, Sony removed the bounds check on sizes passed to readSectors, so we can reach the following with controlled
+    sectorCount:
+  </p>
 
-<pre><code>0xb31bc:
+  <pre><code>0xb31bc:
 
 iVar1 = readSectors(sectorCount,sectorNumber,0xb6c40);</code></pre>
 
-<br>
+  <br>
 
-<p>
-  In PCSX2 emulator, we can exploit this bug by overflowing into the stack (you can just spam payload addresses like 0xa00c0000 to that massive range of controlled memory and it will jump to it).
-</p>
+  <p>
+    In the PCSX2 emulator, we can exploit this bug by overflowing into the stack (you can just spam payload addresses
+    like 0xa00c0000 to that massive range of controlled memory and it will jump to it).
+  </p>
 
-<p>
-  I was super excited by this, and started writing a nice exploit for 2.14+, but then krHacken burned the disc and found out that it isn't accepted by mechacon as a valid DVD Video, so we can't trigger this bug on the hardware. This makes sense; the change was too random to have been a security regression, especially as 2.14 was a release that fixed the readPartitionTables bug, otherwise it would have seemed too much like a backdoor lol
-</p>
+  <p>
+    I was super excited by this and started writing a nice exploit for 2.14+, but then krHacken burned the disc and
+    found out that it isn't accepted by the mechacon as a valid DVD Video, so we can't trigger this bug on the hardware.
+    This makes sense; the change was too random to have been a security regression, especially as 2.14 was a release
+    that fixed the readPartitionTables bug, otherwise, it would have seemed too much like a backdoor lol
+  </p>
 
 </body>
+
 </html>
 
 2.13
